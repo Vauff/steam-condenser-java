@@ -14,6 +14,8 @@ package com.github.koraktor.steamcondenser;
  */
 public abstract class Helper {
 
+    public static boolean debug = false;
+
     /**
      * Convert an integer value into the corresponding byte array
      *

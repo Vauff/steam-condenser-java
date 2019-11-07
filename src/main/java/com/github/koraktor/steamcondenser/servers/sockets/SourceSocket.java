@@ -10,6 +10,8 @@ package com.github.koraktor.steamcondenser.servers.sockets;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
+
+import com.github.koraktor.steamcondenser.Helper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -96,7 +98,8 @@ public class SourceSocket extends QuerySocket {
                     bytesRead = 0;
                 }
 
-                LOG.info("Received packet #" + packetNumber + " of " + packetCount + " for request ID " + requestId + ".");
+                if (Helper.debug)
+                    LOG.info("Received packet #" + packetNumber + " of " + packetCount + " for request ID " + requestId + ".");
             } while(bytesRead > 0 && this.packetIsSplit());
 
             if(isCompressed) {
@@ -110,9 +113,9 @@ public class SourceSocket extends QuerySocket {
 
         this.buffer.flip();
 
-        if(isCompressed) {
+        if(isCompressed && Helper.debug) {
             LOG.info("Received compressed reply of type \"" + packet.getClass().getSimpleName() + "\"");
-        } else {
+        } else if (Helper.debug) {
             LOG.info("Received reply of type \"" + packet.getClass().getSimpleName() + "\"");
         }
 

@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeoutException;
+
+import com.github.koraktor.steamcondenser.Helper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -344,7 +346,8 @@ public abstract class GameServer extends Server {
         }
 
         if(!expectedResponse.isInstance(responsePacket)) {
-            LOG.warn("Expected " + expectedResponse + ", got " + responsePacket.getClass() + ".");
+            if (Helper.debug)
+                LOG.warn("Expected " + expectedResponse + ", got " + responsePacket.getClass() + ".");
             if(repeatOnFailure) {
                 this.handleResponseForRequest(requestType, false);
             }

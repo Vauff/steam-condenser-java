@@ -1,2 +1,10 @@
 doc
 target
+/bin
+/.classpath
+/.project
+/.settings
+/.idea
+/*.iml
+/out/
+*.kotlin_module
