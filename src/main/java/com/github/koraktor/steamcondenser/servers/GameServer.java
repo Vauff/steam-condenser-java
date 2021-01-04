@@ -43,6 +43,7 @@ public abstract class GameServer extends Server {
     protected static final int REQUEST_INFO = 1;
     protected static final int REQUEST_PLAYER = 2;
     protected static final int REQUEST_RULES = 3;
+    protected static final int REQUEST_INFO_CHALLENGE = 4;
     protected int challengeNumber = 0xFFFFFFFF;
     protected int ping;
     protected HashMap<String, SteamPlayer> playerHash;
@@ -317,7 +318,7 @@ public abstract class GameServer extends Server {
                 break;
             case GameServer.REQUEST_INFO:
                 expectedResponse = S2A_INFO_BasePacket.class;
-                requestPacket = new A2S_INFO_Packet(this.challengeNumber);
+                requestPacket = new A2S_INFO_Packet();
                 break;
             case GameServer.REQUEST_PLAYER:
                 expectedResponse = S2A_PLAYER_Packet.class;
@@ -326,6 +327,10 @@ public abstract class GameServer extends Server {
             case GameServer.REQUEST_RULES:
                 expectedResponse = S2A_RULES_Packet.class;
                 requestPacket = new A2S_RULES_Packet(this.challengeNumber);
+                break;
+            case GameServer.REQUEST_INFO_CHALLENGE:
+                expectedResponse = S2A_INFO_BasePacket.class;
+                requestPacket = new A2S_INFO_Packet(this.challengeNumber);
                 break;
         }
 
@@ -341,6 +346,10 @@ public abstract class GameServer extends Server {
             this.rulesHash = ((S2A_RULES_Packet) responsePacket).getRulesHash();
         } else if(responsePacket instanceof S2C_CHALLENGE_Packet) {
             this.challengeNumber = ((S2C_CHALLENGE_Packet) responsePacket).getChallengeNumber();
+            if (expectedResponse == S2A_INFO_BasePacket.class) {
+                this.handleResponseForRequest(GameServer.REQUEST_INFO_CHALLENGE);
+                return;
+            }
         } else {
             throw new SteamCondenserException("Response of type " + responsePacket.getClass() + " cannot be handled by this method.");
         }
@@ -366,8 +375,8 @@ public abstract class GameServer extends Server {
     public void initialize()
             throws SteamCondenserException, TimeoutException {
         this.updatePing();
-        this.updateChallengeNumber();
         this.updateServerInfo();
+        this.updateChallengeNumber();
     }
 
     /**
@@ -489,7 +498,7 @@ public abstract class GameServer extends Server {
      */
     public void updatePing()
             throws SteamCondenserException, TimeoutException {
-        this.sendRequest(new A2S_INFO_Packet(this.challengeNumber));
+        this.sendRequest(new A2S_INFO_Packet());
         long startTime = System.currentTimeMillis();
         this.getReply();
         long endTime = System.currentTimeMillis();

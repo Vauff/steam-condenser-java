@@ -18,7 +18,14 @@ import com.github.koraktor.steamcondenser.Helper;
 public class A2S_INFO_Packet extends SteamPacket {
 
     /**
-     * Creates a new A2S_INFO request object
+     * Creates a new A2S_INFO request object without a challenge
+     */
+    public A2S_INFO_Packet() {
+        super(SteamPacket.A2S_INFO_HEADER, "Source Engine Query\0".getBytes());
+    }
+
+    /**
+     * Creates a new A2S_INFO request object with a challenge
      */
     public A2S_INFO_Packet(int challengeNumber) {
         super(SteamPacket.A2S_INFO_HEADER, generateContentBytes(challengeNumber));
