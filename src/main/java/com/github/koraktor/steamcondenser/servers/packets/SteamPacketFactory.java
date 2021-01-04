@@ -45,7 +45,7 @@ public abstract class SteamPacketFactory {
 
         switch(header) {
             case SteamPacket.A2S_INFO_HEADER:
-                return new A2S_INFO_Packet();
+                return new A2S_INFO_Packet(Helper.integerFromByteArray(data));
 
             case SteamPacket.S2A_INFO_DETAILED_HEADER:
                 return new S2A_INFO_DETAILED_Packet(data);

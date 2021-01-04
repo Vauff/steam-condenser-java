@@ -317,7 +317,7 @@ public abstract class GameServer extends Server {
                 break;
             case GameServer.REQUEST_INFO:
                 expectedResponse = S2A_INFO_BasePacket.class;
-                requestPacket = new A2S_INFO_Packet();
+                requestPacket = new A2S_INFO_Packet(this.challengeNumber);
                 break;
             case GameServer.REQUEST_PLAYER:
                 expectedResponse = S2A_PLAYER_Packet.class;
@@ -366,8 +366,8 @@ public abstract class GameServer extends Server {
     public void initialize()
             throws SteamCondenserException, TimeoutException {
         this.updatePing();
-        this.updateServerInfo();
         this.updateChallengeNumber();
+        this.updateServerInfo();
     }
 
     /**
@@ -489,7 +489,7 @@ public abstract class GameServer extends Server {
      */
     public void updatePing()
             throws SteamCondenserException, TimeoutException {
-        this.sendRequest(new A2S_INFO_Packet());
+        this.sendRequest(new A2S_INFO_Packet(this.challengeNumber));
         long startTime = System.currentTimeMillis();
         this.getReply();
         long endTime = System.currentTimeMillis();
